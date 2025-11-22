@@ -10,6 +10,8 @@ import Reels from "./pages/Reels";
 import Messages from "./pages/Messages";
 import Notifications from "./pages/Notifications";
 import CreatePost from "./pages/CreatePost";
+import CreateStory from "./pages/CreateStory";
+import CreateReel from "./pages/CreateReel";
 import Profile from "./pages/Profile";
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
@@ -101,6 +103,22 @@ function App() {
           element={
             <ProtectedRoute>
               <CreatePost />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/create-story"
+          element={
+            <ProtectedRoute>
+              <CreateStory />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/create-reel"
+          element={
+            <ProtectedRoute>
+              <CreateReel />
             </ProtectedRoute>
           }
         />
