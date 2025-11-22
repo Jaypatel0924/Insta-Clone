@@ -75,6 +75,21 @@ export const userService = {
     const response = await api.post(`/users/${userId}/follow`);
     return response.data;
   },
+
+  acceptFollowRequest: async (userId: string) => {
+    const response = await api.post(`/users/${userId}/accept`);
+    return response.data;
+  },
+
+  rejectFollowRequest: async (userId: string) => {
+    const response = await api.post(`/users/${userId}/reject`);
+    return response.data;
+  },
+
+  getFollowRequests: async () => {
+    const response = await api.get('/users/follow-requests');
+    return response.data;
+  },
 };
 
 export const messageService = {
