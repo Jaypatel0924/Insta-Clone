@@ -65,7 +65,7 @@ export default function StoryViewer({ storyGroups, initialGroupIndex, onClose }:
     }, interval);
 
     return () => clearInterval(timer);
-  }, [currentGroupIndex, currentStoryIndex]);
+  }, [currentGroupIndex, currentStoryIndex, nextStory]);
 
   const nextStory = () => {
     if (currentStoryIndex < currentGroup.stories.length - 1) {

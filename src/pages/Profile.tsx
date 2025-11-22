@@ -51,13 +51,22 @@ export default function Profile() {
     setFollowLoading(true);
     try {
       const result = await userService.toggleFollow(profileData.id);
+      
+      // Calculate new follower count based on the action
+      let newFollowerCount = profileData.followers;
+      if (result.isFollowing && !profileData.isFollowing) {
+        // Just followed
+        newFollowerCount = profileData.followers + 1;
+      } else if (!result.isFollowing && profileData.isFollowing) {
+        // Just unfollowed
+        newFollowerCount = profileData.followers - 1;
+      }
+      
       setProfileData({
         ...profileData,
         isFollowing: result.isFollowing,
         hasRequestedFollow: result.isRequested,
-        followers: result.isFollowing 
-          ? profileData.followers + 1 
-          : profileData.followers - (profileData.isFollowing ? 1 : 0),
+        followers: newFollowerCount,
       });
     } catch (error) {
       console.error('Failed to toggle follow:', error);

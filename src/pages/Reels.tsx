@@ -77,7 +77,7 @@ export default function Reels() {
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [currentIndex, reels.length]);
+  }, [currentIndex, reels.length, handleScroll]);
 
   if (reels.length === 0) {
     return (
