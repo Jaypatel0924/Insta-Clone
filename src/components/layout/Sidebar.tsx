@@ -82,9 +82,13 @@ export default function Sidebar() {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="start" className="w-56">
-            <DropdownMenuItem>Settings</DropdownMenuItem>
+            <DropdownMenuItem onClick={() => window.location.href = '/settings'}>
+              Settings
+            </DropdownMenuItem>
             <DropdownMenuItem>Your activity</DropdownMenuItem>
-            <DropdownMenuItem>Saved</DropdownMenuItem>
+            <DropdownMenuItem onClick={() => window.location.href = '/saved'}>
+              Saved
+            </DropdownMenuItem>
             <DropdownMenuItem>Switch appearance</DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={logout} className="text-destructive">

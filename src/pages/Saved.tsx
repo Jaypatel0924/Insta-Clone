@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import MainLayout from '@/components/layout/MainLayout';
-import { Search, Heart, MessageCircle } from 'lucide-react';
-import { Input } from '@/components/ui/input';
+import { Bookmark, Heart, MessageCircle } from 'lucide-react';
 import { postService } from '@/services/api.service';
 
 interface Post {
@@ -14,60 +13,48 @@ interface Post {
   likes: number;
   comments: number;
   isLiked: boolean;
+  isSaved: boolean;
 }
 
-export default function Explore() {
+export default function Saved() {
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
-  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
-    const fetchExplorePosts = async () => {
+    const fetchSavedPosts = async () => {
       try {
-        const data = await postService.getExplorePosts();
+        const data = await postService.getSavedPosts();
         setPosts(data);
       } catch (error) {
-        console.error('Failed to fetch explore posts:', error);
+        console.error('Failed to fetch saved posts:', error);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchExplorePosts();
+    fetchSavedPosts();
   }, []);
-
-  const filteredPosts = posts.filter(post =>
-    post.username.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    post.caption.toLowerCase().includes(searchQuery.toLowerCase())
-  );
 
   return (
     <MainLayout>
       <div className="max-w-[935px] mx-auto py-8 px-4">
-        <div className="mb-8">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
-            <Input
-              type="text"
-              placeholder="Search"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 bg-gray-100 border-none"
-            />
-          </div>
-        </div>
+        <h1 className="text-2xl font-semibold mb-8">Saved Posts</h1>
 
         {loading ? (
           <div className="text-center py-12">
             <p className="text-gray-500">Loading...</p>
           </div>
-        ) : filteredPosts.length === 0 ? (
+        ) : posts.length === 0 ? (
           <div className="text-center py-12">
-            <p className="text-gray-500">No posts to explore</p>
+            <Bookmark className="w-16 h-16 mx-auto mb-4 text-gray-300" />
+            <p className="text-2xl font-light mb-2">Save</p>
+            <p className="text-sm text-gray-500">
+              Save photos and videos that you want to see again.
+            </p>
           </div>
         ) : (
           <div className="grid grid-cols-3 gap-1">
-            {filteredPosts.map((post) => (
+            {posts.map((post) => (
               <div
                 key={post.id}
                 className="aspect-square relative group cursor-pointer overflow-hidden"

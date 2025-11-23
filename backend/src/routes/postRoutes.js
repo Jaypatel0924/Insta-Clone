@@ -1,10 +1,12 @@
 const express = require('express');
-const { getFeedPosts, createPost, toggleLike, toggleSave, addComment } = require('../controllers/postController');
+const { getFeedPosts, createPost, toggleLike, toggleSave, addComment, getExplorePosts, getSavedPosts } = require('../controllers/postController');
 const { protect } = require('../middleware/auth');
 
 const router = express.Router();
 
 router.get('/', protect, getFeedPosts);
+router.get('/explore', protect, getExplorePosts);
+router.get('/saved', protect, getSavedPosts);
 router.post('/', protect, createPost);
 router.post('/:id/like', protect, toggleLike);
 router.post('/:id/save', protect, toggleSave);

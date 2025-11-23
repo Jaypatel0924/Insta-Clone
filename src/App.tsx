@@ -13,6 +13,8 @@ import CreatePost from "./pages/CreatePost";
 import CreateStory from "./pages/CreateStory";
 import CreateReel from "./pages/CreateReel";
 import Profile from "./pages/Profile";
+import Saved from "./pages/Saved";
+import Settings from "./pages/Settings";
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { isAuthenticated, isLoading } = useAuthStore();
@@ -127,6 +129,22 @@ function App() {
           element={
             <ProtectedRoute>
               <Profile />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/saved"
+          element={
+            <ProtectedRoute>
+              <Saved />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/settings"
+          element={
+            <ProtectedRoute>
+              <Settings />
             </ProtectedRoute>
           }
         />
