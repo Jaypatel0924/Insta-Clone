@@ -1,4 +1,4 @@
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Home, Search, Compass, Film, MessageCircle, Heart, PlusSquare, User, Menu, Instagram } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useAuthStore } from '@/store/useAuthStore';
@@ -13,6 +13,7 @@ import {
 
 export default function Sidebar() {
   const location = useLocation();
+  const navigate = useNavigate();
   const { user, logout } = useAuthStore();
 
   const navItems = [
@@ -82,11 +83,11 @@ export default function Sidebar() {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="start" className="w-56">
-            <DropdownMenuItem onClick={() => window.location.href = '/settings'}>
+            <DropdownMenuItem onClick={() => navigate('/settings')}>
               Settings
             </DropdownMenuItem>
             <DropdownMenuItem>Your activity</DropdownMenuItem>
-            <DropdownMenuItem onClick={() => window.location.href = '/saved'}>
+            <DropdownMenuItem onClick={() => navigate('/saved')}>
               Saved
             </DropdownMenuItem>
             <DropdownMenuItem>Switch appearance</DropdownMenuItem>
