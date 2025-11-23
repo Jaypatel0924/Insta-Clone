@@ -163,4 +163,93 @@ const addComment = async (req, res) => {
   }
 };
 
-module.exports = { getFeedPosts, createPost, toggleLike, toggleSave, addComment };
+// @desc    Get explore posts (public posts from non-followed users)
+// @route   GET /api/posts/explore
+// @access  Private
+const getExplorePosts = async (req, res) => {
+  try {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 30;
+    const skip = (page - 1) * limit;
+
+    const currentUser = await User.findById(req.user._id);
+    const followingIds = currentUser.following;
+
+    // Get posts from users we don't follow (excluding private accounts we don't follow)
+    const posts = await Post.find()
+      .populate({
+        path: 'user',
+        select: 'username profilePicture isPrivate',
+      })
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit);
+
+    // Filter out posts from private accounts we don't follow and our own posts
+    const filteredPosts = posts.filter(post => {
+      const isOwnPost = post.user._id.toString() === req.user._id.toString();
+      const isFollowing = followingIds.includes(post.user._id);
+      const isPrivate = post.user.isPrivate;
+
+      // Exclude own posts and posts from private accounts we don't follow
+      return !isOwnPost && (!isPrivate || isFollowing);
+    });
+
+    const formattedPosts = filteredPosts.map(post => ({
+      id: post._id,
+      userId: post.user._id,
+      username: post.user.username,
+      userAvatar: post.user.profilePicture,
+      images: post.images,
+      caption: post.caption,
+      hashtags: post.hashtags,
+      location: post.location,
+      likes: post.likes.length,
+      comments: post.comments.length,
+      isLiked: post.likes.includes(req.user._id),
+      isSaved: currentUser.savedPosts.includes(post._id),
+      createdAt: post.createdAt,
+    }));
+
+    res.json(formattedPosts);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// @desc    Get saved posts
+// @route   GET /api/posts/saved
+// @access  Private
+const getSavedPosts = async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id).populate({
+      path: 'savedPosts',
+      populate: {
+        path: 'user',
+        select: 'username profilePicture',
+      },
+    });
+
+    const formattedPosts = user.savedPosts.map(post => ({
+      id: post._id,
+      userId: post.user._id,
+      username: post.user.username,
+      userAvatar: post.user.profilePicture,
+      images: post.images,
+      caption: post.caption,
+      hashtags: post.hashtags,
+      location: post.location,
+      likes: post.likes.length,
+      comments: post.comments.length,
+      isLiked: post.likes.includes(req.user._id),
+      isSaved: true,
+      createdAt: post.createdAt,
+    }));
+
+    res.json(formattedPosts);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+module.exports = { getFeedPosts, createPost, toggleLike, toggleSave, addComment, getExplorePosts, getSavedPosts };

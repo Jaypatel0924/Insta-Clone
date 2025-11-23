@@ -39,6 +39,16 @@ export const postService = {
     return response.data;
   },
 
+  getExplorePosts: async (page = 1, limit = 30) => {
+    const response = await api.get(`/posts/explore?page=${page}&limit=${limit}`);
+    return response.data;
+  },
+
+  getSavedPosts: async () => {
+    const response = await api.get('/posts/saved');
+    return response.data;
+  },
+
   createPost: async (data: any) => {
     const response = await api.post('/posts', data);
     return response.data;
@@ -73,6 +83,21 @@ export const userService = {
 
   toggleFollow: async (userId: string) => {
     const response = await api.post(`/users/${userId}/follow`);
+    return response.data;
+  },
+
+  acceptFollowRequest: async (userId: string) => {
+    const response = await api.post(`/users/${userId}/accept`);
+    return response.data;
+  },
+
+  rejectFollowRequest: async (userId: string) => {
+    const response = await api.post(`/users/${userId}/reject`);
+    return response.data;
+  },
+
+  getFollowRequests: async () => {
+    const response = await api.get('/users/follow-requests');
     return response.data;
   },
 };
